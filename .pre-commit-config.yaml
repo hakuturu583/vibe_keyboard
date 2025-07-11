@@ -5,6 +5,7 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
+        args: [--allow-multiple-documents]
       - id: check-added-large-files
       - id: mixed-line-ending
 
@@ -15,3 +16,8 @@ repos:
         args: [--style=file]
       - id: cpplint
         args: [--filter=-legal/copyright,-whitespace/tab]
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.6.26
+    hooks:
+      - id: actionlint
