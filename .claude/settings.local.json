@@ -10,7 +10,10 @@
       "Bash(uv sync:*)",
       "Bash(uv run:*)",
       "Bash(git checkout:*)",
-      "Bash(git fetch:*)"
+      "Bash(git fetch:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.m5stack.com)",
+      "Bash(uv run:*)"
     ],
     "deny": [
       "Bash(git push --force:*)",
