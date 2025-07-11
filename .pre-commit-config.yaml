@@ -21,3 +21,13 @@ repos:
     rev: v1.6.26
     hooks:
       - id: actionlint
+
+  - repo: local
+    hooks:
+      - id: platformio-build
+        name: PlatformIO Build Test
+        entry: uv run task build
+        language: system
+        pass_filenames: false
+        files: \.(cpp|c|h|hpp|ino)$|platformio\.ini$
+        description: Run PlatformIO build to ensure code compiles

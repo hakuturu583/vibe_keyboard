@@ -20,6 +20,8 @@ on:
       - "**/*.md"
       - ".clang-format"
       - ".pre-commit-config.yaml"
+      - ".github/**/*.yml"
+      - ".github/**/*.yaml"
 
 jobs:
   claude-review:
