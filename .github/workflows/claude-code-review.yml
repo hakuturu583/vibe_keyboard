@@ -18,6 +18,8 @@ on:
       - "platformio.ini"
       - "pyproject.toml"
       - "**/*.md"
+      - ".clang-format"
+      - ".pre-commit-config.yaml"
 
 jobs:
   claude-review:
