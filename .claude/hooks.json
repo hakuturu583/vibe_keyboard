@@ -1,0 +1,5 @@
+{
+  "bash": {
+    "pre": "if echo \"$COMMAND\" | grep -E '(force[[:space:]]+(push|-push)|push[[:space:]]+-[[:alnum:]]*f|docker|kubectl|aws[[:space:]]|gcloud|az[[:space:]]|terraform|helm|podman|buildah|skopeo|runc|containerd|cri-o|minikube|kind|k3s|k8s|eksctl|aks|gke|ecs|fargate|lambda|cloudformation|cdk|pulumi|ansible|vagrant|packer)' > /dev/null; then echo \"❌ Dangerous command blocked: This command involves force push, Docker, or cloud operations which are not allowed.\"; exit 1; fi"
+  }
+}
