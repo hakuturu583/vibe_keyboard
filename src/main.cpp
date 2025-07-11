@@ -14,7 +14,7 @@ bool is_initialized = false;
 
 int button_x, button_y, button_radius;
 
-void drawRecordButton(bool pressed) {
+void drawRecordButton(bool recording) {
     int center_x = M5.Display.width() / 2;
     int center_y = M5.Display.height() / 2;
     int radius = 40;
@@ -23,19 +23,19 @@ void drawRecordButton(bool pressed) {
     button_y = center_y;
     button_radius = radius;
     
-    if (pressed) {
+    if (recording) {
         M5.Display.fillCircle(center_x, center_y, radius, TFT_RED);
         M5.Display.fillCircle(center_x, center_y, radius - 8, TFT_WHITE);
         M5.Display.fillCircle(center_x, center_y, radius - 15, TFT_RED);
         M5.Display.setTextColor(TFT_WHITE, TFT_RED);
         M5.Display.setTextDatum(middle_center);
-        M5.Display.drawString("REC", center_x, center_y);
+        M5.Display.drawString("STOP", center_x, center_y);
     } else {
         M5.Display.fillCircle(center_x, center_y, radius, TFT_DARKGREY);
         M5.Display.fillCircle(center_x, center_y, radius - 5, TFT_RED);
         M5.Display.setTextColor(TFT_WHITE, TFT_RED);
         M5.Display.setTextDatum(middle_center);
-        M5.Display.drawString("TAP", center_x, center_y);
+        M5.Display.drawString("REC", center_x, center_y);
     }
     M5.Display.setTextDatum(top_left);
 }
@@ -60,6 +60,11 @@ void stopRecording() {
     if (is_recording) {
         is_recording = false;
         drawRecordButton(false);
+        
+        M5.Display.fillRect(0, 200, M5.Display.width(), 40, TFT_BLACK);
+        M5.Display.setTextColor(TFT_YELLOW, TFT_BLACK);
+        M5.Display.setCursor(10, 200);
+        M5.Display.printf("推論中...");
     }
 }
 
@@ -100,7 +105,8 @@ void setup() {
     
     M5.Display.clear();
     M5.Display.setCursor(10, 10);
-    M5.Display.printf("録音ボタンをタップしてください\n");
+    M5.Display.printf("RECボタンで録音開始\n");
+    M5.Display.printf("STOPボタンで推論実行\n");
     
     drawRecordButton(false);
     is_initialized = true;
@@ -110,20 +116,18 @@ void loop() {
     module_llm.update();
     M5.update();
 
-    if (is_recording) {
-        for (auto& msg : module_llm.msg.responseMsgList) {
-            if (msg.work_id == whisper_work_id) {
-                if (msg.object == "asr.utf-8") {
-                    JsonDocument doc;
-                    deserializeJson(doc, msg.raw_msg);
-                    String asr_result = doc["data"].as<String>();
+    for (auto& msg : module_llm.msg.responseMsgList) {
+        if (msg.work_id == whisper_work_id) {
+            if (msg.object == "asr.utf-8") {
+                JsonDocument doc;
+                deserializeJson(doc, msg.raw_msg);
+                String asr_result = doc["data"].as<String>();
 
-                    if (asr_result.length() > 0) {
-                        M5.Display.fillRect(0, 200, M5.Display.width(), 40, TFT_BLACK);
-                        M5.Display.setTextColor(TFT_GREEN, TFT_BLACK);
-                        M5.Display.setCursor(10, 200);
-                        M5.Display.printf("認識: %s", asr_result.c_str());
-                    }
+                if (asr_result.length() > 0) {
+                    M5.Display.fillRect(0, 200, M5.Display.width(), 40, TFT_BLACK);
+                    M5.Display.setTextColor(TFT_GREEN, TFT_BLACK);
+                    M5.Display.setCursor(10, 200);
+                    M5.Display.printf("認識結果: %s", asr_result.c_str());
                 }
             }
         }
@@ -152,7 +156,8 @@ void loop() {
     if (M5.BtnA.wasPressed()) {
         M5.Display.clear();
         M5.Display.setCursor(10, 10);
-        M5.Display.printf("録音ボタンをタップしてください\n");
+        M5.Display.printf("RECボタンで録音開始\n");
+        M5.Display.printf("STOPボタンで推論実行\n");
         drawRecordButton(is_recording);
     }
 
