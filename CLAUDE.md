@@ -86,25 +86,25 @@ The following operations are restricted in `.claude/settings.local.json`:
 
 ### Adding a New Library
 ```bash
-pio pkg install <library-name>
+uv run pio pkg install <library-name>
 ```
 
 ### Checking Library Dependencies
 ```bash
-pio pkg list
+uv run pio pkg list
 ```
 
 ### Board Information
 ```bash
-pio boards
+uv run pio boards
 ```
 
 ## Debugging Tips
 
 1. Use Serial.print() for debugging output
-2. Check `pio device monitor` for runtime errors
+2. Check `uv run pio device monitor` for runtime errors
 3. Verify board connections before uploading
-4. Use `pio run -v` for verbose build output
+4. Use `uv run pio run -v` for verbose build output
 
 ## Pre-commit Hooks
 
