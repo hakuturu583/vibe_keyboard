@@ -24,8 +24,9 @@ void drawRecordButton(bool pressed) {
     button_radius = radius;
     
     if (pressed) {
-        M5.Display.fillCircle(center_x, center_y, radius, TFT_MAROON);
-        M5.Display.fillCircle(center_x, center_y, radius - 5, TFT_RED);
+        M5.Display.fillCircle(center_x, center_y, radius, TFT_RED);
+        M5.Display.fillCircle(center_x, center_y, radius - 8, TFT_WHITE);
+        M5.Display.fillCircle(center_x, center_y, radius - 15, TFT_RED);
         M5.Display.setTextColor(TFT_WHITE, TFT_RED);
         M5.Display.setTextDatum(middle_center);
         M5.Display.drawString("REC", center_x, center_y);
@@ -44,10 +45,6 @@ void startRecording() {
         is_recording = true;
         drawRecordButton(true);
         
-        M5.Display.setTextColor(TFT_GREEN, TFT_BLACK);
-        M5.Display.setCursor(10, 10);
-        M5.Display.printf("録音開始...\n");
-        
         m5_module_llm::ApiVadSetupConfig_t vad_config;
         vad_config.input = {"sys.pcm"};
         vad_work_id = module_llm.vad.setup(vad_config, "vad_setup");
@@ -63,10 +60,6 @@ void stopRecording() {
     if (is_recording) {
         is_recording = false;
         drawRecordButton(false);
-        
-        M5.Display.setTextColor(TFT_ORANGE, TFT_BLACK);
-        M5.Display.setCursor(10, 30);
-        M5.Display.printf("録音停止\n");
     }
 }
 
@@ -119,12 +112,6 @@ void loop() {
 
     if (is_recording) {
         for (auto& msg : module_llm.msg.responseMsgList) {
-            if (msg.work_id == vad_work_id) {
-                M5.Display.setTextColor(TFT_BLUE, TFT_BLACK);
-                M5.Display.setCursor(10, 50);
-                M5.Display.printf("音声検出中...\n");
-            }
-
             if (msg.work_id == whisper_work_id) {
                 if (msg.object == "asr.utf-8") {
                     JsonDocument doc;
