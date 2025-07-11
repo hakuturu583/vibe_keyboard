@@ -8,7 +8,9 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(uv sync:*)",
-      "Bash(uv run:*)"
+      "Bash(uv run:*)",
+      "Bash(git checkout:*)",
+      "Bash(git fetch:*)"
     ],
     "deny": [
       "Bash(git push --force:*)",
