@@ -1,0 +1,55 @@
+name: PlatformIO CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Cache PlatformIO
+      uses: actions/cache@v4
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-pio-${{ hashFiles('**/platformio.ini') }}
+        restore-keys: |
+          ${{ runner.os }}-pio-
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install PlatformIO Core
+      run: pip install --upgrade platformio
+
+    - name: Build PlatformIO Project
+      run: pio run
+
+    - name: Upload firmware binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: firmware-m5stack-core2
+        path: .pio/build/m5stack-core2/firmware.bin
+        retention-days: 30
+
+    - name: Upload ELF file
+      uses: actions/upload-artifact@v4
+      with:
+        name: firmware-m5stack-core2-elf
+        path: .pio/build/m5stack-core2/firmware.elf
+        retention-days: 30
